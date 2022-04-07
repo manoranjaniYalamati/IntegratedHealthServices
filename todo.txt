@@ -1,0 +1,12 @@
+need to submit the booking 
+send the 1)isconsultation online- need to ask it there - need to add a field
+2)doctor id from that h1
+3)patient id from userid - write a request to get patient id here
+4)symptoms description which is given here
+5)slot id - i dont know how to fetch this- need ot explore
+
+
+
+prescription - can be called that api 
+
+linking jwt and all pages 

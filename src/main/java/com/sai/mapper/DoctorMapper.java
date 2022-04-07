@@ -5,6 +5,7 @@ import com.sai.api.dto.DoctorDetailsDTO;
 import com.sai.api.requests.DoctorRequest;
 import com.sai.api.requests.UserRequest;
 import com.sai.model.Doctor;
+import com.sai.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 
@@ -23,4 +24,5 @@ public interface DoctorMapper {
 
     Doctor map(UserRequest userRequest);
 
+  //  Doctor map(User user);
 }

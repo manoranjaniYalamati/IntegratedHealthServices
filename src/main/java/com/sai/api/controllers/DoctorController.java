@@ -9,7 +9,9 @@ import com.sai.exception.DoctorNotfoundException;
 import com.sai.mapper.AppointmentMapper;
 import com.sai.mapper.DoctorMapper;
 import com.sai.model.Doctor;
+import com.sai.service.AppointmentService;
 import com.sai.service.DoctorService;
+import com.sai.services.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.coyote.Request;
@@ -17,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Set;
 
@@ -28,6 +32,18 @@ public class DoctorController {
 
     @Autowired
     private DoctorService doctorService;
+
+    @Autowired
+    private UserServiceImpl userService;
+
+    @Autowired
+    private HttpServletRequest req;
+
+    @Autowired
+    private HttpServletResponse res;
+
+    @Autowired
+    private AppointmentService appointmentService;
 
 
     private final DoctorMapper doctorMapper;
@@ -83,4 +99,18 @@ public class DoctorController {
         return appointmentMapper.map(doctorService.savePrescriptionOfAppointment(appointmentId, prescription));
     }
 
+    @GetMapping("/experience/{experience}")
+    public List<DoctorDetailsDTO> findDoctorBySpeciality(@PathVariable("experience") int experience) throws DoctorNotfoundException{
+        log.debug("GET /doctor/"+experience);
+        List<DoctorDetailsDTO> doctorDetailsDTO = doctorService.findDoctorByExperience(experience);
+        return doctorDetailsDTO;
+    }
+
+
+
+    @GetMapping("/appointment")
+    public List<Long> findAppointmentIdsOfADoctor(){
+            Long doctorId = doctorService.getDoctorIdByUserId(userService.getUserIdFromJWT(req,res));
+            return appointmentService.findAppointmentsIdsByDoctorId(doctorId);
+    }
 }

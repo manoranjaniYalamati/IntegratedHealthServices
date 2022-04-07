@@ -16,6 +16,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import java.io.FileWriter;
+import java.io.IOException;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -32,7 +34,7 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
-    public ResponseEntity<?> generateToken(@RequestBody LoginUser loginUser) throws AuthenticationException {
+    public AuthToken generateToken(@RequestBody LoginUser loginUser) throws AuthenticationException {
 
         final Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -43,7 +45,18 @@ public class UserController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final String token = jwtTokenUtil.generateToken(authentication);
         AuthToken authToken = new AuthToken(token);
-        return ResponseEntity.ok(token);// i think this should work
+        try {
+            FileWriter Writer
+                    = new FileWriter("tokenfile.txt");
+            Writer.write(token);
+            Writer.close();
+            System.out.println("file created");
+        }
+        catch (IOException e) {
+            System.out.println("An error has occurred.");
+            e.printStackTrace();
+        }
+        return authToken;// i think this should work
     }
 
 //    @RequestMapping(value="/register", method = RequestMethod.POST)
@@ -53,13 +66,17 @@ public class UserController {
 
     @RequestMapping(value="/register", method = RequestMethod.POST)
     public UserDto saveUser(@RequestBody UserRequest user){
-        return userService.save(user);
+        UserDto userDto= userService.save(user);
+        System.out.println(userDto);
+        return userDto;
     }
 
     @PreAuthorize("hasRole('DOCTOR')")
-    @RequestMapping(value="/userping", method = RequestMethod.GET)
-    public String userPing(){
-        return "Any User Can Read This";
+    @RequestMapping(value="/isDoctor", method = RequestMethod.GET)
+    public Boolean isDoctor(){
+
+        System.out.println("executing");
+        return true;
     }
 
 }

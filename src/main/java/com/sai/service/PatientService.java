@@ -46,5 +46,9 @@ public class PatientService {
             throw new PatientNotfoundException("Patient Not Found with id " + id);
         }
     }
-    
+
+    public Long getPatientIdByUserId(Long userId) {
+        Patient patient = patientRepository.findByUserId(userId);
+        return patient.getId();
+    }
 }

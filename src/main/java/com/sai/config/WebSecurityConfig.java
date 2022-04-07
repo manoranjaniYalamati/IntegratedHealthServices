@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -32,6 +33,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsService).passwordEncoder(encoder());
     }
 
+//    @Override
+//    protected void configure(final HttpSecurity http) throws Exception {
+//        // if disabling CSRF protection
+//        // https://docs.spring.io/spring-security/site/docs/5.5.3/reference/html5/#csrf-when
+//        http.csrf().disable();
+//
+//        // if Spring MVC is on classpath and no CorsConfigurationSource is provided,
+//        // Spring Security will use CORS configuration provided to Spring MVC
+//        http.cors(Customizer.withDefaults());
+//    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
@@ -42,6 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+        http.cors(Customizer.withDefaults());
     }
 
     @Bean

@@ -48,7 +48,7 @@ public class LoggingAspect {
         SimpleMailMessage msg = new SimpleMailMessage();
         msg.setTo(patient.getContactEmail());
         SimpleDateFormat dt = new SimpleDateFormat("EEE, d MMM yyyy hh:mm aaa");
-
+      //  String Date = dt.format(appointment.getStartTime());
         if(appointment.getMeetLink() == null){
             String messageText = "Dear " + patient.getName() + ",\n Your appointment to consult doctor " + doctor.getName() + " has been scheduled on  " + dt.format(appointment.getStartTime()) + " to " + dt.format(appointment.getEndTime()) + ".\nYou can contact the doctor at hospital";
             msg.setText(messageText);

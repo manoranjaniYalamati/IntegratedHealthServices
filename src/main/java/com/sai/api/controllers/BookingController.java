@@ -49,6 +49,11 @@ public class BookingController {
         return appointmentMapper.map(bookingService.bookAppointment(slotId, symptomsDescription, patientId, doctorId, isConsultationOnline));
     }
 
+    @RequestMapping(value = "/{id}/{doctorId}",method = RequestMethod.POST)
+    public AppointmentDTO Book(@PathVariable("id") Long slotId,@PathVariable("doctorId") Long doctorId,  @RequestParam("symptomsDescription") String symptomsDescription, @RequestParam("isConsultationOnline") Boolean isConsultationOnline) throws AppointmentSlotsNotFoundException, AppointmentSlotNotAvailableException, PatientNotfoundException, DoctorNotfoundException, TimeSlotNotFoundException {
+        return appointmentMapper.map(bookingService.bookAppointment(slotId, symptomsDescription, doctorId, isConsultationOnline));
+    }
+
     @RequestMapping(value = "/gmail", method = RequestMethod.POST)
     public String sendEmail(){
 

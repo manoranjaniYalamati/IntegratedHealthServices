@@ -8,6 +8,7 @@ import com.sai.mapper.AppointmentMapper;
 import com.sai.mapper.DoctorMapper;
 import com.sai.model.Appointment;
 import com.sai.model.Doctor;
+import com.sai.model.Patient;
 import com.sai.repository.AppointmentRepository;
 import com.sai.repository.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,5 +89,30 @@ public class DoctorService {
         appointment.setPrescription(prescription);
         appointmentService.delete(appointmentId);
         return appointmentRepository.save(appointment);
+    }
+
+    public List<DoctorDetailsDTO> findDoctorByExperience(int experience) throws DoctorNotfoundException {
+        List<Doctor> doctors = doctorRepository.findDoctorsByExperience(experience);// have to make it as List<Doctor>
+        if(doctors != null){
+            List<DoctorDetailsDTO> doctorDetailsDTOS = new ArrayList<>();
+            for(Doctor doctor : doctors) {
+                DoctorDetailsDTO doctorDetailsDTO = new DoctorDetailsDTO();
+                doctorDetailsDTO.setId(doctor.getId());
+                doctorDetailsDTO.setSpeciality(doctor.getSpeciality());
+                doctorDetailsDTO.setExperience(doctor.getExperience());
+                doctorDetailsDTO.setName(doctor.getName());
+                doctorDetailsDTO.setGender(doctor.getGender());
+                doctorDetailsDTOS.add(doctorDetailsDTO);
+            }
+            return doctorDetailsDTOS;
+        }
+        else{
+            throw new DoctorNotfoundException("Doctor Not Found with experience " + experience);//cant we get that error code to be in postman
+        }
+    }
+
+    public Long getDoctorIdByUserId(Long userId) {
+        Doctor doctor = doctorRepository.findDoctorByUserId(userId);
+        return doctor.getId();
     }
 }

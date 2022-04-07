@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2021-11-07T14:54:15+0530",
+    date = "2022-04-07T09:45:09+0530",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 11.0.12 (Amazon.com Inc.)"
 )
 @Component
@@ -43,6 +43,7 @@ public class TimeSlotsMapperImpl implements TimeSlotsMapper {
         timeSlotsDTO.setStartTime( timeSlots.getStartTime() );
         timeSlotsDTO.setEndTime( timeSlots.getEndTime() );
         timeSlotsDTO.setSlotId( timeSlots.getSlotId() );
+        timeSlotsDTO.setDoctorSlots( timeSlots.getDoctorSlots() );
 
         return timeSlotsDTO;
     }

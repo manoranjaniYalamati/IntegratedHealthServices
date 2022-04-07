@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2021-11-07T14:54:15+0530",
+    date = "2022-04-07T09:45:09+0530",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 11.0.12 (Amazon.com Inc.)"
 )
 @Component
@@ -33,6 +33,9 @@ public class DoctorMapperImpl implements DoctorMapper {
 
         doctor.setName( doctorRequest.getName() );
         doctor.setSpeciality( doctorRequest.getSpeciality() );
+        if ( doctorRequest.getExperience() != null ) {
+            doctor.setExperience( Integer.parseInt( doctorRequest.getExperience() ) );
+        }
         doctor.setGender( doctorRequest.getGender() );
         doctor.setContactEmail( doctorRequest.getContactEmail() );
         doctor.setMeetLink( doctorRequest.getMeetLink() );
@@ -67,6 +70,9 @@ public class DoctorMapperImpl implements DoctorMapper {
 
         doctor.setName( doctorRequest.getName() );
         doctor.setSpeciality( doctorRequest.getSpeciality() );
+        if ( doctorRequest.getExperience() != null ) {
+            doctor.setExperience( Integer.parseInt( doctorRequest.getExperience() ) );
+        }
         doctor.setGender( doctorRequest.getGender() );
         doctor.setContactEmail( doctorRequest.getContactEmail() );
         doctor.setMeetLink( doctorRequest.getMeetLink() );
@@ -96,6 +102,9 @@ public class DoctorMapperImpl implements DoctorMapper {
 
         doctor.setName( userRequest.getName() );
         doctor.setSpeciality( userRequest.getSpeciality() );
+        if ( userRequest.getExperience() != null ) {
+            doctor.setExperience( Integer.parseInt( userRequest.getExperience() ) );
+        }
         doctor.setGender( userRequest.getGender() );
         doctor.setContactEmail( userRequest.getContactEmail() );
         doctor.setMeetLink( userRequest.getMeetLink() );
@@ -145,6 +154,7 @@ public class DoctorMapperImpl implements DoctorMapper {
         timeSlotsDTO.setStartTime( timeSlots.getStartTime() );
         timeSlotsDTO.setEndTime( timeSlots.getEndTime() );
         timeSlotsDTO.setSlotId( timeSlots.getSlotId() );
+        timeSlotsDTO.setDoctorSlots( timeSlots.getDoctorSlots() );
 
         return timeSlotsDTO;
     }

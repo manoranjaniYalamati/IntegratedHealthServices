@@ -6,6 +6,7 @@ import com.sai.exception.*;
 import com.sai.mapper.AppointmentMapper;
 import com.sai.mapper.AppointmentSlotsMapper;
 import com.sai.model.*;
+import com.sai.services.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.mail.javamail.JavaMailSender;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -47,6 +50,15 @@ public class BookingService {
 
     @Autowired
     private AppointmentSlotsMapper appointmentSlotsMapper;
+
+    @Autowired
+    private UserServiceImpl userService;
+
+    @Autowired
+    private HttpServletRequest req;
+
+    @Autowired
+    private HttpServletResponse res;
 
     public List<TimeSlots> findTimeSlotsOfDoctorId(Long doctorId) throws AppointmentSlotsNotFoundException, AppointmentSlotNotAvailableException {
         AppointmentSlots appointmentSlots = appointmentSlotsService.findAppointmentSlotsByDoctorId(doctorId);
@@ -93,5 +105,33 @@ public class BookingService {
         javaMailSender.send(msg);
 
         return "success";
+    }
+
+
+
+
+    public Appointment bookAppointment(Long slotId, String symptomsDescription, Long doctorId, Boolean isConsultationOnline) throws AppointmentSlotsNotFoundException, AppointmentSlotNotAvailableException, PatientNotfoundException, DoctorNotfoundException, TimeSlotNotFoundException {
+        TimeSlots timeSlot = timeSlotsService.findTimeSlot(slotId);
+        if (timeSlot != null) {
+
+            Doctor doctor = doctorService.findDoctor(doctorId);
+
+            Appointment appointment = new Appointment();
+            appointment.setDoctorId(doctorId);
+            appointment.setPatientId(patientService.getPatientIdByUserId(userService.getUserIdFromJWT(req, res)));
+            appointment.setUserId(userService.getUserIdFromJWT(req, res));
+            appointment.setStartTime(timeSlot.getStartTime());
+            appointment.setEndTime(timeSlot.getEndTime());
+            if(isConsultationOnline){
+                appointment.setMeetLink(doctor.getMeetLink());
+            }
+            appointment.setSymptomsDescription(symptomsDescription);
+            appointmentService.create(appointment);
+            timeSlotsService.delete(slotId);
+            return appointment;
+
+        } else {
+            throw new TimeSlotNotFoundException("TimeSlot not found with id : " + slotId);
+        }
     }
 }

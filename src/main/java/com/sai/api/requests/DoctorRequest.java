@@ -15,4 +15,6 @@ public class DoctorRequest {
     private String speciality;
 
     private String meetLink;
+
+    private String experience;
 }

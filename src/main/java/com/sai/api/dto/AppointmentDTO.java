@@ -13,7 +13,8 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AppointmentDTO {
+public class AppointmentDTO {//need to include user id and patient name and doctor name
+    //need to add userid in doctor and patient too
 
     private Long doctorId;
 

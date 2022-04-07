@@ -27,6 +27,9 @@ public class Appointment {
    @Column(name = "patient_id")
     private Long patientId;
 
+   @Column(name= "user_id")
+   private Long userId;
+
 //    @ManyToOne
 //    @JoinColumn(name="doctor_id", nullable=false)
 //    private Doctor doctor;
@@ -50,6 +53,13 @@ public class Appointment {
     @ToString.Exclude
     private Patient patient;
 
+    @ManyToOne
+    @Fetch(value = FetchMode.SELECT)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private User user;
+
     @JsonFormat(shape=JsonFormat.Shape.STRING,pattern="yyyy-MM-dd hh:mm:ss")
     private Date startTime;
 
@@ -61,5 +71,7 @@ public class Appointment {
     private String Prescription;
 
     private String meetLink;
+
+
 
 }

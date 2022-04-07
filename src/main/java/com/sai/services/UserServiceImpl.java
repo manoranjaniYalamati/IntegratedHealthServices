@@ -3,6 +3,7 @@ package com.sai.services;
 import com.sai.api.dto.UserDto;
 import com.sai.api.requests.PatientRequest;
 import com.sai.api.requests.UserRequest;
+import com.sai.config.TokenProvider;
 import com.sai.mapper.DoctorMapper;
 import com.sai.mapper.PatientMapper;
 import com.sai.mapper.UserMapper;
@@ -11,9 +12,11 @@ import com.sai.model.Patient;
 import com.sai.model.Role;
 import com.sai.model.User;
 import com.sai.repository.UserDao;
+import com.sai.service.AppointmentService;
 import com.sai.service.DoctorService;
 import com.sai.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,6 +24,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -28,6 +33,12 @@ import java.util.Set;
 
 @Service(value = "userService")
 public class UserServiceImpl implements UserDetailsService, UserService {
+
+    @Value("${jwt.header.string}")
+    public String HEADER_STRING;
+
+    @Value("${jwt.token.prefix}")
+    public String TOKEN_PREFIX;
 
     @Autowired
     private RoleService roleService;
@@ -52,6 +63,15 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Autowired
     private DoctorMapper doctorMapper;
+
+    @Autowired
+    private TokenProvider jwtTokenUtil;
+
+    @Autowired
+    private HttpServletRequest req;
+
+    @Autowired
+    private HttpServletResponse res;
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userDao.findByUsername(username);
@@ -105,13 +125,28 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         Role role = roleService.findRoleById(roleId);
         if (role.getName().equals("DOCTOR")) {
             Doctor doctor = doctorMapper.map(userRequest);
+            doctor.setUserId(user.getId());
             doctorService.create(doctor);
         }
         else {
             Patient patient = patientMapper.map(userRequest);
+            patient.setUserId(user.getId());
             patientService.create(patient);
         }
 
         return userMapper.map(nUser);
+    }
+
+    public Long getUserIdFromJWT(HttpServletRequest req, HttpServletResponse res){
+        String header = req.getHeader(HEADER_STRING);
+        String authToken = header.replace(TOKEN_PREFIX,"");
+        String username = jwtTokenUtil.getUsernameFromToken(authToken);
+        User user = userDao.findByUsername(username);
+        return user.getId();
+    }
+
+    public Long getPatientIdOfCurrentUserIfHeIsPatient(){
+        Long userId = getUserIdFromJWT(req,res);
+        return patientService.getPatientIdByUserId(userId);
     }
 }

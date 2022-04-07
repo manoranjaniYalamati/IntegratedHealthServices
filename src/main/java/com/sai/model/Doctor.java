@@ -3,6 +3,8 @@ package com.sai.model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
 
 
@@ -32,6 +34,9 @@ public class Doctor {
 
     private String meetLink;
 
+    @Column(name= "user_id")
+    private Long userId;
+
     @OneToMany(mappedBy = "doctor", fetch = FetchType.LAZY)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
@@ -40,5 +45,12 @@ public class Doctor {
 
     @OneToOne(mappedBy = "doctor")
     private AppointmentSlots appointmentSlots;
+
+    @OneToOne
+    @Fetch(value = FetchMode.SELECT)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private User user;
 
 }

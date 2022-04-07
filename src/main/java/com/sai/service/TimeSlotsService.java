@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -51,6 +52,7 @@ public class TimeSlotsService {
         long dif = startTime.getTime();
         //    List<TimeSlots> timeSlots = new List<TimeSlots>();
         List<TimeSlots> timeSlots =  new ArrayList<>();
+        SimpleDateFormat dt = new SimpleDateFormat("hh:mm aaa");
         while (dif < endTime.getTime()) {
             Date slot = new Date(dif);
             //  System.out.println("Hour Slot --->" + slot);
@@ -61,6 +63,10 @@ public class TimeSlotsService {
                 timeSlot.setStartTime(slot);
                 timeSlot.setEndTime(new Date(dif));// may be we need to save timeslot too?
                 timeSlot.setSlotId(appointmentSlots.getId());// remove or not
+
+                String startSlot = dt.format(slot);
+                String endSlot = dt.format(timeSlot.getEndTime());
+                timeSlot.setDoctorSlots(startSlot + " - " + endSlot);
                 create(timeSlot);
                 timeSlots.add(timeSlot);
             }

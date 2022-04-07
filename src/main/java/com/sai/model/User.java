@@ -8,6 +8,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -47,6 +48,17 @@ public class User {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Role role;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private List<Appointment> appointments;
+
+    @OneToOne(mappedBy = "user")
+    private Doctor doctor;
+
+    @OneToOne(mappedBy = "user")
+    private Patient patient;
 
 //    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 //    @JoinTable(name = "USER_ROLES",

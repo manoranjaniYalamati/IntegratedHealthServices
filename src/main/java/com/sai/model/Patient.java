@@ -3,6 +3,8 @@ package com.sai.model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -23,6 +25,9 @@ public class Patient {
     @Column(name="gender")
     private  Gender gender;
 
+    @Column(name= "user_id")
+    private Long userId;
+
     private int age;
 
     private String contactEmail;//not null
@@ -31,6 +36,14 @@ public class Patient {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private List<Appointment> appointments;
+
+
+    @OneToOne
+    @Fetch(value = FetchMode.SELECT)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private User user;
 
 //    @OneToMany(mappedBy = "patient")
 //    private Set<Appointment> appointments;

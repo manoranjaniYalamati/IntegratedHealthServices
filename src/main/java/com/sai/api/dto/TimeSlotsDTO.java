@@ -18,4 +18,6 @@ public class TimeSlotsDTO {
     private Date endTime;
 
     private Long slotId;
+
+    private String doctorSlots;
 }

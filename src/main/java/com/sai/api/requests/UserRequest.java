@@ -12,17 +12,19 @@ public class UserRequest {
 
     private String email;
 
-    private String phone;
+    private String phone;//ledhu
 
-    private String name;
+    private String name;//ledhu
 
     private Gender gender;
 
-    private String contactEmail;
+    private String contactEmail;//ledu
 
-    private String speciality;
+    private String speciality;//ledu
 
     private String meetLink;
 
-    private Long roleId;
+    private String roleId;
+
+    private String experience;
 }

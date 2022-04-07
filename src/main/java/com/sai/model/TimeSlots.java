@@ -25,6 +25,8 @@ public class TimeSlots {
     @JsonFormat(shape=JsonFormat.Shape.STRING,pattern="yyyy-MM-dd hh:mm:ss")
     private Date endTime;
 
+    private String doctorSlots;
+
     @Column(name = "slot_id")
     private Long slotId;
 
